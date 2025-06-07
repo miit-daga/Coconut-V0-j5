@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
 import {
   Upload,
   Leaf,
@@ -77,45 +78,46 @@ interface LightParticle {
   delay: number
 }
 
-const COCONUT_ENDPOINT = "https://937e-34-27-169-199.ngrok-free.app"
+const COCONUT_ENDPOINT = "https://8373-34-30-41-19.ngrok-free.app"
 const EGGPLANT_ENDPOINT = "https://placeholder-eggplant-endpoint.ngrok.app"
 
 const coconutTreatments = {
   "Bud Root Dropping":
-    "💧 **Problem:** This is often caused by poor soil drainage and fungal infection. \n✅ **Action:** Improve drainage around the base of the palm. Avoid overwatering. Apply a fungicide like Hexaconazole as a soil drench, following product guidelines.",
+    "🩺 **Problem:** Caused by poor soil drainage and fungal infection.\n✅ **Action:** Improve drainage around the palm's base and avoid overwatering.\n🛡️ **Treatment:** Apply a fungicide like Hexaconazole as a soil drench, following product guidelines.",
   "Bud Rot":
-    "✂️ **Immediate Action:** Carefully cut away and destroy all infected buds and surrounding leaves to stop the spread. \n🛡️ **Treatment:** Apply a copper-based fungicide, such as Bordeaux mixture, to the palm's crown and any nearby healthy palms.",
+    "🩺 **Problem:** A fast-spreading fungal infection in the palm's crown.\n✅ **Action:** Immediately cut away and destroy all infected buds and surrounding leaves.\n🛡️ **Treatment:** Apply a copper-based fungicide, such as Bordeaux mixture, to the crown of the affected palm and any nearby healthy palms.",
   "Gray Leaf Spot":
-    "🌱 **Diagnosis:** A fungal disease often linked to nutrient deficiencies. \n✅ **Action:** Ensure the palm is well-fertilized, especially with potassium. For severe cases, apply a fungicide containing Mancozeb.",
+    "🩺 **Problem:** A fungal disease often linked to nutrient deficiencies.\n✅ **Action:** Ensure the palm is well-fertilized, especially with potassium.\n🛡️ **Treatment:** For severe cases, apply a fungicide containing Mancozeb.",
   "Leaf Rot":
-    "🍂 **Action:** Prune and destroy all affected leaves immediately. \n🛡️ **Prevention:** Improve air circulation by clearing away dense undergrowth. In recurring cases, a fungicide like Propiconazole can be effective.",
+    "🩺 **Problem:** Fungal infection affecting the leaves.\n✅ **Action:** Prune and destroy all affected leaves immediately.\n🛡️ **Prevention:** Improve air circulation by clearing away dense undergrowth. In recurring cases, a fungicide like Propiconazole can be effective.",
   "Stem Bleeding":
-    "🔧 **Action:** Carefully scrape away the infected bark area until you see healthy tissue. \n🛡️ **Treatment:** Apply Bordeaux paste or a copper-based fungicide directly to the cleaned wound to prevent further infection.",
+    "🩺 **Problem:** A fungal infection causing a reddish-brown liquid to ooze from the trunk.\n✅ **Action:** Carefully scrape away the infected bark area until you see healthy tissue.\n🛡️ **Treatment:** Apply Bordeaux paste or a copper-based fungicide directly to the cleaned wound to prevent further infection.",
   Healthy:
     "✅ **Excellent Condition:** Your palm is healthy. Continue your current watering, fertilization, and maintenance schedule to keep it that way.",
 }
 
 const eggplantTreatments = {
   Aphids:
-    "💧 **Physical Removal:** Start by spraying the aphids off the leaves with a strong jet of water. \n🌱 **Organic Treatment:** For persistent infestations, apply Neem oil or insecticidal soap, making sure to cover the undersides of leaves. \n🐞 **Long-Term Control:** Encourage beneficial insects like ladybugs, which are natural predators.",
+    "🩺 **Problem:** Small insects feeding on plant sap, often found under leaves.\n✅ **Action:** Spray the aphids off the leaves with a strong jet of water.\n🛡️ **Treatment:** For persistent infestations, apply Neem oil or insecticidal soap. Encourage beneficial insects like ladybugs.",
   "Cercospora Leaf Spot":
-    "💨 **Prevention:** Improve air circulation by properly spacing your plants and pruning lower leaves. \n🛡️ **Treatment:** If the infection is widespread, use a fungicide containing Chlorothalonil, following the label's instructions.",
+    "🩺 **Problem:** A fungal disease causing spots on the leaves.\n✅ **Action:** Remove and destroy heavily infected leaves.\n🛡️ **Prevention:** Improve air circulation by properly spacing plants and pruning lower leaves. A fungicide with Chlorothalonil can be used for widespread infection.",
   "Defect Eggplant":
-    "🌱 **Diagnosis:** Often caused by a calcium deficiency (blossom-end rot). \n✅ **Action:** Ensure consistent watering. You can apply a calcium-rich foliar spray or amend the soil with a calcium supplement.",
+    "🩺 **Problem:** Likely a calcium deficiency, also known as blossom-end rot.\n✅ **Action:** Ensure consistent watering to help with calcium uptake.\n🛡️ **Treatment:** Apply a calcium-rich foliar spray or amend the soil with a calcium supplement.",
   "Flea Beetles":
-    "🛡️ **Prevention:** Use row covers on young plants to create a physical barrier. \n🐜 **Treatment:** Apply Spinosad, a biocontrol insecticide, or dust plants with diatomaceous earth to control the beetle population.",
-  "Fresh Eggplant / Fresh Eggplant Leaf":
-    "🌟 **Excellent Condition:** Your plant is healthy and thriving. Keep up the great work with your current care routine!",
+    "🩺 **Problem:** Small, dark beetles that chew numerous small holes in leaves.\n✅ **Action:** Apply Spinosad (an organic insecticide) or dust plants with diatomaceous earth.\n🛡️ **Prevention:** Use row covers on young plants to create a physical barrier.",
+  "Fresh Eggplant":
+    "✅ **Excellent Condition:** Your plant is healthy and thriving. Keep up the great work with your current care routine!",
+  "Fresh Eggplant Leaf":
+    "✅ **Excellent Condition:** Your plant is healthy and thriving. Keep up the great work with your current care routine!",
   "Leaf Wilt":
-    "‼️ **CRITICAL ALERT: Verticillium or Fusarium Wilt Detected.** This soil-borne disease is incurable. \n❌ **Action:** Immediately remove and destroy the entire plant (do not compost). To prevent future issues, avoid planting eggplants, tomatoes, or peppers in this same spot for several years (crop rotation).",
+    "‼️ **CRITICAL ALERT: Verticillium or Fusarium Wilt Detected.** This soil-borne disease is incurable.\n❌ **Action:** Immediately remove and destroy the entire plant (do not compost). To prevent future issues, avoid planting eggplants, tomatoes, or peppers in this same spot for several years (crop rotation).",
   "Phytophthora Blight":
-    "⚠️ **Warning: Advanced Blight Detected.** This is a serious water mold. \n✅ **Action:** Improve soil drainage immediately. Avoid overhead watering. A fungicide with copper or phosphorous acid may help control the spread.",
+    "⚠️ **Warning: Advanced Blight Detected.** A serious water mold that rots the plant.\n✅ **Action:** Improve soil drainage immediately and avoid overhead watering.\n🛡️ **Treatment:** A fungicide with copper or phosphorous acid may help slow the spread on less affected plants.",
   "Powdery Mildew":
-    "💨 **Prevention:** Increase air circulation between plants and avoid getting leaves wet in the evening. \n🌱 **Treatment:** Spray with Neem oil, potassium bicarbonate, or a commercial fungicide designed for powdery mildew.",
+    "🩺 **Problem:** A white, powdery fungus on leaves and stems.\n✅ **Action:** Increase air circulation between plants and avoid getting leaves wet in the evening.\n🛡️ **Treatment:** Spray with Neem oil, potassium bicarbonate, or a specific fungicide for powdery mildew.",
   "Tobacco Mosaic Virus":
-    "🦠 **CRITICAL ALERT: Virus Detected.** This disease has no cure and is highly contagious. \n❌ **Action:** Carefully remove and destroy the infected plant immediately. Wash your hands and disinfect any tools that touched the plant to avoid spreading it.",
+    "🦠 **CRITICAL ALERT: Virus Detected.** This disease has no cure and is highly contagious.\n❌ **Action:** Carefully remove and destroy the infected plant immediately. Wash your hands and disinfect any tools that touched the plant to avoid spreading it.",
 }
-
 export default function PlantDiseaseDetector() {
   const { theme, setTheme } = useTheme()
   const [selectedPlant, setSelectedPlant] = useState<"coconut" | "eggplant">("coconut")
@@ -1290,10 +1292,14 @@ export default function PlantDiseaseDetector() {
                                   <h4 className="font-bold text-blue-500 font-mono mb-2 text-sm md:text-base">
                                     TREATMENT PROTOCOL:
                                   </h4>
-                                  <p className="text-muted-foreground text-xs md:text-sm leading-relaxed">
-                                    {treatments[prediction.predicted_class as keyof typeof treatments] ||
-                                      "🔬 UNKNOWN PATHOGEN: Consult genomic agricultural database for advanced treatment protocols."}
-                                  </p>
+                                  <div className="text-muted-foreground text-xs md:text-sm leading-relaxed">
+                                    <MarkdownRenderer
+                                      text={
+                                        treatments[prediction.predicted_class as keyof typeof treatments] ||
+                                        "🔬 UNKNOWN PATHOGEN: Consult the genomic agricultural database for advanced treatment protocols."
+                                      }
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             </div>
