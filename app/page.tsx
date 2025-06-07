@@ -78,7 +78,7 @@ interface LightParticle {
   delay: number
 }
 
-const COCONUT_ENDPOINT = "https://8373-34-30-41-19.ngrok-free.app"
+const COCONUT_ENDPOINT = "https://ff99-34-106-88-244.ngrok-free.app"
 const EGGPLANT_ENDPOINT = "https://placeholder-eggplant-endpoint.ngrok.app"
 
 const coconutTreatments = {
@@ -156,27 +156,16 @@ export default function PlantDiseaseDetector() {
   useEffect(() => {
     if (!mounted || windowSize.width === 0) return
 
-    // Create leaf particles
-    // const leaves = Array.from({ length: 20 }, (_, i) => ({
-    //   id: i,
-    //   x: Math.random() * windowSize.width,
-    //   y: windowSize.height + Math.random() * 100,
-    //   size: Math.random() * 15 + 10,
-    //   rotation: Math.random() * 360,
-    //   speed: Math.random() * 1 + 0.5,
-    //   delay: Math.random() * 10,
-    // }))
     const leaves = Array.from({ length: 20 }, (_, i) => ({
       id: i,
       x: Math.random() * windowSize.width,
-      y: -100, // <-- CHANGE: Start 100px above the screen
+      y: -100,
       size: Math.random() * 15 + 10,
       rotation: Math.random() * 360,
       speed: Math.random() * 1 + 0.5,
       delay: Math.random() * 10,
     }));
 
-    // Create light particles
     const lights = Array.from({ length: 15 }, (_, i) => ({
       id: i,
       x: Math.random() * windowSize.width,
@@ -309,7 +298,6 @@ export default function PlantDiseaseDetector() {
     }
   }
 
-  // Don't render until mounted to avoid hydration issues
   if (!mounted) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -322,7 +310,6 @@ export default function PlantDiseaseDetector() {
     <div className="min-h-screen relative overflow-hidden">
       {/* Plant-themed Background Effects */}
       <div className="fixed inset-0 z-0">
-        {/* Animated Grid */}
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -335,50 +322,21 @@ export default function PlantDiseaseDetector() {
             animation: "gridMove 20s linear infinite",
           }}
         />
-
-        {/* DNA Helix */}
-        <div className="fixed inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
-          <div className="w-full h-[600px] opacity-100 dark:opacity-100">
-            <div className="dna-helix">
-              {Array.from({ length: 20 }).map((_, i) => (
-                <div key={i} className="dna-step" style={{ animationDelay: `${i * 0.1}s` }}>
-                  <div className="dna-base-pair">
-                    <div className="dna-base dna-base-left"></div>
-                    <div className="dna-base dna-base-right"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        {/* Floating Leaf Particles */}
         {leafParticles.map((leaf) => (
-          // <div
-          //   key={leaf.id}
-          //   className="leaf-particle absolute pointer-events-none"
-          //   style={{
-          //     left: `${leaf.x}px`,
-          //     bottom: `-50px`,
-          //     width: `${leaf.size}px`,
-          //     height: `${leaf.size}px`,
-          //     animationDelay: `${leaf.delay}s`,
-          //     animationDuration: `${15 / leaf.speed}s`,
-          //   }}
-          // >
           <div
             key={leaf.id}
             className="leaf-particle absolute pointer-events-none"
             style={{
               left: `${leaf.x}px`,
-              top: `${leaf.y}px`, // <-- CHANGE: Use 'top' for positioning
+              top: `${leaf.y}px`,
               width: `${leaf.size}px`,
               height: `${leaf.size}px`,
               animationDelay: `${leaf.delay}s`,
-              animationDuration: `${20 / leaf.speed}s`, // Increased duration for a slower fall
+              animationDuration: `${20 / leaf.speed}s`,
             }}
           >
             <Leaf
-              className="text-green-500 w-full h-full opacity-20" // <-- ADDED opacity-50
+              className="text-green-500 w-full h-full opacity-20"
               style={{
                 transform: `rotate(${leaf.rotation}deg)`,
                 filter: "drop-shadow(0 0 5px rgba(34, 197, 94, 0.5))",
@@ -387,7 +345,6 @@ export default function PlantDiseaseDetector() {
           </div>
         ))}
 
-        {/* Photosynthesis Light Particles */}
         {lightParticles.map((particle) => (
           <div
             key={particle.id}
@@ -405,7 +362,6 @@ export default function PlantDiseaseDetector() {
           />
         ))}
 
-        {/* Growing Root Network */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="root-network">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -430,11 +386,7 @@ export default function PlantDiseaseDetector() {
         </div>
       </div>
 
-      {/* Main Content */}
-      {/* FIX 2: Changed background opacity from /90 to /80 to make animations visible */}
-      {/* <div className="relative z-10 min-h-screen bg-background/70 dark:bg-background/80"> */}
       <div className="relative z-10 min-h-screen">
-        {/* Simple Theme Toggle */}
         <div className="fixed top-4 right-4 z-50">
           <TooltipProvider>
             <Tooltip>
@@ -443,7 +395,7 @@ export default function PlantDiseaseDetector() {
                   variant="outline"
                   size="icon"
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="rounded-full glass-morphism border-primary/20 hover:border-primary/40"
+                  className="rounded-full transparent-bg border-primary/20 hover:border-primary/40"
                 >
                   {theme === "dark" ? (
                     <Sun className="h-5 w-5 text-yellow-500" />
@@ -459,7 +411,6 @@ export default function PlantDiseaseDetector() {
           </TooltipProvider>
         </div>
 
-        {/* Success Confetti Effect */}
         {showConfetti && (
           <div className="fixed inset-0 pointer-events-none z-50">
             <div className="absolute inset-0 flex items-center justify-center">
@@ -469,7 +420,6 @@ export default function PlantDiseaseDetector() {
                 transition={{ duration: 1, type: "spring" }}
                 className="relative"
               >
-                {/* Confetti particles */}
                 <div className="absolute -inset-20 flex items-center justify-center">
                   {Array.from({ length: 50 }).map((_, i) => (
                     <motion.div
@@ -500,7 +450,6 @@ export default function PlantDiseaseDetector() {
                   ))}
                 </div>
 
-                {/* Central icon */}
                 <motion.div
                   initial={{ opacity: 1, scale: 1 }}
                   animate={{ opacity: 0, scale: 1.5 }}
@@ -515,7 +464,6 @@ export default function PlantDiseaseDetector() {
         )}
 
         <div className="container mx-auto px-4 py-8 max-w-7xl">
-          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -524,7 +472,7 @@ export default function PlantDiseaseDetector() {
           >
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-6 md:mb-8">
               <motion.div
-                className="relative p-4 md:p-6 rounded-full glass-morphism border border-primary/30"
+                className="relative p-4 md:p-6 rounded-full transparent-bg border border-primary/30"
                 whileHover={{ scale: 1.1, rotate: 10 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
@@ -571,7 +519,6 @@ export default function PlantDiseaseDetector() {
               <span className="text-blue-500 font-semibold"> molecular-level analysis</span>
             </motion.p>
 
-            {/* Status Indicators */}
             <motion.div
               className="flex flex-wrap justify-center gap-4 md:gap-8 mt-6 md:mt-8"
               initial={{ opacity: 0, y: 20 }}
@@ -593,14 +540,13 @@ export default function PlantDiseaseDetector() {
             </motion.div>
           </motion.div>
 
-          {/* Critical Alert */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1.3, duration: 0.5 }}
             className="mb-8 md:mb-12"
           >
-            <Alert className="glass-morphism border-amber-500/50 text-amber-600 dark:text-amber-200">
+            <Alert className="transparent-bg border-amber-500/50 text-amber-600 dark:text-amber-200">
               <AlertTriangle className="h-5 w-5 text-amber-500 animate-pulse" />
               <AlertDescription className="font-mono text-sm md:text-base">
                 <strong className="text-amber-500">[CRITICAL NOTICE]</strong> This system provides advanced AI analysis
@@ -611,14 +557,13 @@ export default function PlantDiseaseDetector() {
             </Alert>
           </motion.div>
 
-          {/* Plant Selection Interface */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.8 }}
             className="mb-8 md:mb-12"
           >
-            <Card className="glass-morphism border border-primary/30 overflow-hidden">
+            <Card className="transparent-bg border border-primary/30 overflow-hidden">
               <CardHeader>
                 <CardTitle className="flex flex-col md:flex-row items-center gap-3 text-xl md:text-2xl">
                   <Dna className="h-6 w-6 md:h-8 md:w-8 text-primary animate-spin" />
@@ -636,7 +581,7 @@ export default function PlantDiseaseDetector() {
                   onValueChange={(value) => setSelectedPlant(value as "coconut" | "eggplant")}
                   className="w-full"
                 >
-                  <TabsList className="grid w-full grid-cols-2 mb-6 md:mb-8 glass-morphism border border-primary/30">
+                  <TabsList className="grid w-full grid-cols-2 mb-6 md:mb-8 transparent-bg border border-primary/30">
                     <TabsTrigger
                       value="coconut"
                       className="data-[state=active]:bg-green-600 data-[state=active]:text-white font-mono text-xs md:text-sm"
@@ -671,7 +616,6 @@ export default function PlantDiseaseDetector() {
                     </TabsTrigger>
                   </TabsList>
 
-                  {/* FIX 3: Removed fixed height and absolute positioning to make it responsive */}
                   <div className="relative overflow-hidden rounded-2xl">
                     <AnimatePresence mode="wait">
                       {selectedPlant === "coconut" ? (
@@ -682,7 +626,7 @@ export default function PlantDiseaseDetector() {
                           exit={{ opacity: 0, x: 50 }}
                           transition={{ duration: 0.6, type: "spring" }}
                         >
-                          <div className="rounded-2xl p-4 md:p-8 glass-morphism border border-green-500/30">
+                          <div className="rounded-2xl p-4 md:p-8 border-none">
                             <div className="flex flex-col items-center gap-4">
                               <div className="text-center w-full">
                                 <h3 className="text-xl md:text-3xl font-bold text-green-500 mb-2 md:mb-4 font-mono">
@@ -693,7 +637,6 @@ export default function PlantDiseaseDetector() {
                                 </p>
                               </div>
 
-                              {/* Mobile: Stack vertically, Desktop: Side by side */}
                               <div className="flex flex-col lg:flex-row items-center w-full gap-4">
                                 <div className="flex-1 w-full">
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 w-full">
@@ -708,7 +651,7 @@ export default function PlantDiseaseDetector() {
                                         >
                                           <Badge
                                             variant="outline"
-                                            className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-500/50 px-2 md:px-4 py-2 md:py-2 font-mono text-xs md:text-sm w-full justify-center min-h-[40px] flex items-center"
+                                            className="bg-emerald-950/50 text-emerald-300 border-emerald-700/80 px-2 md:px-4 py-2 md:py-2 font-mono text-xs md:text-sm w-full justify-center min-h-[40px] flex items-center"
                                           >
                                             <Microscope className="h-3 w-3 mr-1 md:mr-2 flex-shrink-0" />
                                             <span className="text-center">{disease}</span>
@@ -721,7 +664,7 @@ export default function PlantDiseaseDetector() {
 
                                 <div className="flex-shrink-0 mt-4 lg:mt-0">
                                   <motion.div
-                                    className="w-20 h-20 md:w-32 md:h-32 rounded-full glass-morphism border-2 border-green-500/50 flex items-center justify-center"
+                                    className="w-20 h-20 md:w-32 md:h-32 rounded-full transparent-bg border-2 border-green-500/50 flex items-center justify-center"
                                     whileHover={{ scale: 1.1, rotate: 360 }}
                                     transition={{ duration: 2 }}
                                   >
@@ -746,7 +689,7 @@ export default function PlantDiseaseDetector() {
                           exit={{ opacity: 0, x: 50 }}
                           transition={{ duration: 0.6, type: "spring" }}
                         >
-                          <div className="rounded-2xl p-4 md:p-8 glass-morphism border border-purple-500/30">
+                          <div className="rounded-2xl p-4 md:p-8 border-none">
                             <div className="flex flex-col items-center gap-4">
                               <div className="text-center w-full">
                                 <h3 className="text-xl md:text-3xl font-bold text-purple-500 mb-2 md:mb-4 font-mono">
@@ -757,7 +700,6 @@ export default function PlantDiseaseDetector() {
                                 </p>
                               </div>
 
-                              {/* Mobile: Stack vertically, Desktop: Side by side */}
                               <div className="flex flex-col lg:flex-row items-center w-full gap-4">
                                 <div className="flex-1 w-full">
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 w-full">
@@ -771,7 +713,7 @@ export default function PlantDiseaseDetector() {
                                       >
                                         <Badge
                                           variant="outline"
-                                          className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-500/50 px-2 md:px-4 py-2 md:py-2 font-mono text-xs md:text-sm w-full justify-center min-h-[40px] flex items-center"
+                                          className="bg-purple-950/50 text-purple-300 border-purple-700/80 px-2 md:px-4 py-2 md:py-2 font-mono text-xs md:text-sm w-full justify-center min-h-[40px] flex items-center"
                                         >
                                           <Bug className="h-3 w-3 mr-1 md:mr-2 flex-shrink-0" />
                                           <span className="text-center">{disease}</span>
@@ -783,7 +725,7 @@ export default function PlantDiseaseDetector() {
 
                                 <div className="flex-shrink-0 mt-4 lg:mt-0">
                                   <motion.div
-                                    className="w-20 h-20 md:w-32 md:h-32 rounded-full glass-morphism border-2 border-purple-500/50 flex items-center justify-center"
+                                    className="w-20 h-20 md:w-32 md:h-32 rounded-full transparent-bg border-2 border-purple-500/50 flex items-center justify-center"
                                     whileHover={{ scale: 1.1, rotate: -360 }}
                                     transition={{ duration: 2 }}
                                   >
@@ -808,14 +750,13 @@ export default function PlantDiseaseDetector() {
             </Card>
           </motion.div>
 
-          {/* File Upload Interface */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.7, duration: 0.8 }}
             className="mb-8 md:mb-12"
           >
-            <Card className="glass-morphism border border-primary/30 overflow-hidden">
+            <Card className="transparent-bg border border-primary/30 overflow-hidden">
               <CardHeader>
                 <CardTitle className="flex flex-col md:flex-row items-center gap-3 text-xl md:text-2xl">
                   <Upload className="h-6 w-6 md:h-8 md:w-8 text-blue-500 animate-bounce" />
@@ -953,7 +894,7 @@ export default function PlantDiseaseDetector() {
                       <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="mb-6 md:mb-8 p-4 md:p-6 glass-morphism rounded-xl border border-yellow-500/30"
+                        className="mb-6 md:mb-8 p-4 md:p-6 transparent-bg rounded-xl border border-yellow-500/30"
                       >
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-3">
@@ -985,14 +926,13 @@ export default function PlantDiseaseDetector() {
                           transition={{ delay: index * 0.1, duration: 0.5 }}
                           whileHover={{ scale: 1.05 }}
                         >
-                          <div className="group relative aspect-square rounded-xl overflow-hidden glass-morphism border border-primary/30 hover:border-primary/50 transition-all duration-300">
+                          <div className="group relative aspect-square rounded-xl overflow-hidden transparent-bg border border-primary/30 hover:border-primary/50 transition-all duration-300">
                             <img
                               src={URL.createObjectURL(file) || "/placeholder.svg"}
                               alt={`Sample ${index + 1}`}
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             />
 
-                            {/* Hover overlay */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center p-2 md:p-3">
                               <Dialog>
                                 <DialogTrigger asChild>
@@ -1004,7 +944,7 @@ export default function PlantDiseaseDetector() {
                                     <Maximize2 className="h-3 w-3 md:h-4 md:w-4" />
                                   </Button>
                                 </DialogTrigger>
-                                <DialogContent className="max-w-4xl p-0 overflow-hidden glass-morphism border border-primary/30">
+                                <DialogContent className="max-w-4xl p-0 overflow-hidden transparent-bg border border-primary/30">
                                   <img
                                     src={URL.createObjectURL(file) || "/placeholder.svg"}
                                     alt={file.name}
@@ -1014,14 +954,12 @@ export default function PlantDiseaseDetector() {
                               </Dialog>
                             </div>
 
-                            {/* File info */}
                             <div className="absolute top-2 left-2 right-2">
                               <div className="text-white text-xs font-mono bg-black/50 px-2 py-1 rounded backdrop-blur-sm">
                                 {file.name.length > 12 ? `${file.name.substring(0, 9)}...` : file.name}
                               </div>
                             </div>
 
-                            {/* Scanning effect */}
                             {isScanning && (
                               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-yellow-400/20 to-transparent animate-pulse" />
                             )}
@@ -1035,17 +973,15 @@ export default function PlantDiseaseDetector() {
             </Card>
           </motion.div>
 
-          {/* Results Section */}
           {predictions.length > 0 && (
             <>
-              {/* Statistics Dashboard */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
                 className="mb-8 md:mb-12"
               >
-                <Card className="glass-morphism border border-primary/30 overflow-hidden">
+                <Card className="transparent-bg border border-primary/30 overflow-hidden">
                   <CardHeader>
                     <CardTitle className="flex flex-col md:flex-row items-center gap-3 text-xl md:text-2xl">
                       <BarChart3 className="h-6 w-6 md:h-8 md:w-8 text-cyan-500 animate-pulse" />
@@ -1102,7 +1038,7 @@ export default function PlantDiseaseDetector() {
                               "rounded-2xl p-4 md:p-6 text-center h-full flex flex-col items-center justify-center border",
                               stat.bgColor,
                               stat.borderColor,
-                              "glass-morphism",
+                              "transparent-bg",
                             )}
                           >
                             <stat.icon className={cn("h-6 w-6 md:h-8 md:w-8 mb-2 md:mb-3 animate-pulse", stat.color)} />
@@ -1115,7 +1051,6 @@ export default function PlantDiseaseDetector() {
                       ))}
                     </div>
 
-                    {/* Disease Distribution */}
                     {Object.keys(stats.classCounts).length > 0 && (
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -1170,7 +1105,6 @@ export default function PlantDiseaseDetector() {
                 </Card>
               </motion.div>
 
-              {/* Prediction Results Grid */}
               <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 mb-16">
                 {predictions.map((prediction, index) => (
                   <motion.div
@@ -1180,8 +1114,7 @@ export default function PlantDiseaseDetector() {
                     transition={{ delay: 0.2 + index * 0.1, duration: 0.6 }}
                     whileHover={{ y: -10, scale: 1.02 }}
                   >
-                    <Card className="glass-morphism border border-primary/30 overflow-hidden h-full flex flex-col group">
-                      {/* Image Section */}
+                    <Card className="transparent-bg border border-primary/30 overflow-hidden h-full flex flex-col group">
                       <div className="aspect-video relative overflow-hidden">
                         <img
                           src={prediction.imageUrl || "/placeholder.svg"}
@@ -1189,7 +1122,6 @@ export default function PlantDiseaseDetector() {
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         />
 
-                        {/* Scanning overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-end p-3 md:p-4">
                           <Dialog>
                             <DialogTrigger asChild>
@@ -1201,7 +1133,7 @@ export default function PlantDiseaseDetector() {
                                 <Maximize2 className="h-4 w-4" />
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-4xl p-0 overflow-hidden glass-morphism border border-cyan-500/30">
+                            <DialogContent className="max-w-4xl p-0 overflow-hidden transparent-bg border border-cyan-500/30">
                               <img
                                 src={prediction.imageUrl || "/placeholder.svg"}
                                 alt="Full Analysis"
@@ -1211,19 +1143,19 @@ export default function PlantDiseaseDetector() {
                           </Dialog>
                         </div>
 
-                        {/* Processing overlay */}
                         {prediction.isProcessing && (
                           <div className="absolute inset-0 bg-black/70 flex items-center justify-center backdrop-blur-sm">
                             <div className="text-center">
                               <motion.div
                                 animate={{ rotate: 360 }}
-                                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                                className="relative mb-4"
+                                transition={{
+                                  duration: 1.5,
+                                  repeat: Number.POSITIVE_INFINITY,
+                                  ease: "linear",
+                                }}
+                                className="relative mx-auto mb-4 h-16 w-16"
                               >
-                                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-t-transparent border-cyan-400" />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <Brain className="h-5 w-5 md:h-6 md:w-6 text-cyan-400 animate-pulse" />
-                                </div>
+                                <div className="absolute inset-0 rounded-full border-2 border-solid border-cyan-400 border-b-transparent border-l-transparent" />
                               </motion.div>
                               <p className="text-cyan-400 font-mono text-sm">NEURAL ANALYSIS</p>
                               <p className="text-muted-foreground font-mono text-xs">Core processing...</p>
@@ -1232,7 +1164,6 @@ export default function PlantDiseaseDetector() {
                         )}
                       </div>
 
-                      {/* Content Section */}
                       <CardContent className="p-4 md:p-6 flex-grow">
                         {prediction.error ? (
                           <div className="text-center h-full flex flex-col items-center justify-center py-6">
@@ -1246,7 +1177,6 @@ export default function PlantDiseaseDetector() {
                           </div>
                         ) : prediction.predicted_class ? (
                           <div className="space-y-4 md:space-y-6">
-                            {/* Status Header */}
                             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
                               <Badge
                                 variant="outline"
@@ -1284,7 +1214,6 @@ export default function PlantDiseaseDetector() {
                               )}
                             </div>
 
-                            {/* Treatment Protocol */}
                             <div className="space-y-4">
                               <div className="flex items-start gap-3">
                                 <Droplets className="h-4 w-4 md:h-5 md:w-5 mt-1 text-blue-500 flex-shrink-0" />
@@ -1307,7 +1236,6 @@ export default function PlantDiseaseDetector() {
                         ) : null}
                       </CardContent>
 
-                      {/* Footer */}
                       <CardFooter className="px-4 md:px-6 py-3 md:py-4 bg-muted/30 border-t border-border">
                         <div className="flex items-center justify-between w-full">
                           <div className="text-xs font-mono text-muted-foreground">
@@ -1328,7 +1256,6 @@ export default function PlantDiseaseDetector() {
         </div>
       </div>
 
-      {/* CSS Animations */}
       <style jsx>{`
         @keyframes gridMove {
           0% { transform: translate(0, 0); }
@@ -1369,9 +1296,9 @@ export default function PlantDiseaseDetector() {
     height: 0;
     opacity: 0;
   }
-  50% { opacity: 0.5; } /* Change: Tweak opacity */
+  50% { opacity: 0.5; }
   100% {
-    height: 100%; /* Change: Grow to full height */
+    height: 100%;
     opacity: 0;
   }
 }
@@ -1395,11 +1322,11 @@ export default function PlantDiseaseDetector() {
 
         .root {
   position: absolute;
-  top: 0; /* Change: Start from the top */
+  top: 0;
   width: 2px;
-  background: linear-gradient(to bottom, rgba(139, 69, 19, 0.6), transparent); /* Change: Gradient direction */
+  background: linear-gradient(to bottom, rgba(139, 69, 19, 0.6), transparent);
   animation: rootGrow 8s ease-out infinite;
-  transform-origin: top; /* Change: Animation origin */
+  transform-origin: top;
 }
 
         .root-branch {
@@ -1469,18 +1396,6 @@ export default function PlantDiseaseDetector() {
         @keyframes dnaBaseRight {
           0%, 100% { transform: translateX(0) scale(1); }
           50% { transform: translateX(-10px) scale(1.2); }
-        }
-
-        .glass-morphism {
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .dark .glass-morphism {
-          background: rgba(0, 0, 0, 0.2);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
         }
       `}</style>
     </div>
