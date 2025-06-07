@@ -155,24 +155,15 @@ export default function PlantDiseaseDetector() {
     if (!mounted || windowSize.width === 0) return
 
     // Create leaf particles
-    // const leaves = Array.from({ length: 20 }, (_, i) => ({
-    //   id: i,
-    //   x: Math.random() * windowSize.width,
-    //   y: windowSize.height + Math.random() * 100,
-    //   size: Math.random() * 15 + 10,
-    //   rotation: Math.random() * 360,
-    //   speed: Math.random() * 1 + 0.5,
-    //   delay: Math.random() * 10,
-    // }))
     const leaves = Array.from({ length: 20 }, (_, i) => ({
       id: i,
       x: Math.random() * windowSize.width,
-      y: -100, // <-- CHANGE: Start 100px above the screen
+      y: windowSize.height + Math.random() * 100,
       size: Math.random() * 15 + 10,
       rotation: Math.random() * 360,
       speed: Math.random() * 1 + 0.5,
       delay: Math.random() * 10,
-    }));
+    }))
 
     // Create light particles
     const lights = Array.from({ length: 15 }, (_, i) => ({
@@ -335,8 +326,9 @@ export default function PlantDiseaseDetector() {
         />
 
         {/* DNA Helix */}
-        <div className="fixed inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
-          <div className="w-full h-[600px] opacity-100 dark:opacity-100">
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+          {/* FIX 1: Increased opacity for visibility */}
+          <div className="w-full h-[600px] opacity-20">
             <div className="dna-helix">
               {Array.from({ length: 20 }).map((_, i) => (
                 <div key={i} className="dna-step" style={{ animationDelay: `${i * 0.1}s` }}>
@@ -349,34 +341,23 @@ export default function PlantDiseaseDetector() {
             </div>
           </div>
         </div>
+
         {/* Floating Leaf Particles */}
         {leafParticles.map((leaf) => (
-          // <div
-          //   key={leaf.id}
-          //   className="leaf-particle absolute pointer-events-none"
-          //   style={{
-          //     left: `${leaf.x}px`,
-          //     bottom: `-50px`,
-          //     width: `${leaf.size}px`,
-          //     height: `${leaf.size}px`,
-          //     animationDelay: `${leaf.delay}s`,
-          //     animationDuration: `${15 / leaf.speed}s`,
-          //   }}
-          // >
           <div
             key={leaf.id}
             className="leaf-particle absolute pointer-events-none"
             style={{
               left: `${leaf.x}px`,
-              top: `${leaf.y}px`, // <-- CHANGE: Use 'top' for positioning
+              bottom: `-50px`,
               width: `${leaf.size}px`,
               height: `${leaf.size}px`,
               animationDelay: `${leaf.delay}s`,
-              animationDuration: `${20 / leaf.speed}s`, // Increased duration for a slower fall
+              animationDuration: `${15 / leaf.speed}s`,
             }}
           >
             <Leaf
-              className="text-green-500 w-full h-full opacity-20" // <-- ADDED opacity-50
+              className="text-green-500 w-full h-full"
               style={{
                 transform: `rotate(${leaf.rotation}deg)`,
                 filter: "drop-shadow(0 0 5px rgba(34, 197, 94, 0.5))",
@@ -430,8 +411,7 @@ export default function PlantDiseaseDetector() {
 
       {/* Main Content */}
       {/* FIX 2: Changed background opacity from /90 to /80 to make animations visible */}
-      {/* <div className="relative z-10 min-h-screen bg-background/70 dark:bg-background/80"> */}
-      <div className="relative z-10 min-h-screen">
+      <div className="relative z-10 min-h-screen bg-background/80">
         {/* Simple Theme Toggle */}
         <div className="fixed top-4 right-4 z-50">
           <TooltipProvider>
@@ -861,7 +841,7 @@ export default function PlantDiseaseDetector() {
                     />
 
                     <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-3 text-foreground">
-                      {isScanning ? "ANALYZING BIO-SIGNATURE..." : "UPLOAD BIOLOGICAL SAMPLES"}
+                      {isScanning ? "ANALYZING BIO-SIGNATURE..." : "DEPLOY BIOLOGICAL SAMPLES"}
                     </h3>
                     <p className="text-muted-foreground font-mono text-sm md:text-lg">
                       {isScanning
@@ -1358,17 +1338,17 @@ export default function PlantDiseaseDetector() {
           }
         }
 
-       @keyframes rootGrow {
-  0% {
-    height: 0;
-    opacity: 0;
-  }
-  50% { opacity: 0.5; } /* Change: Tweak opacity */
-  100% {
-    height: 100%; /* Change: Grow to full height */
-    opacity: 0;
-  }
-}
+        @keyframes rootGrow {
+          0% { 
+            height: 0;
+            opacity: 0;
+          }
+          50% { opacity: 1; }
+          100% { 
+            height: var(--root-height, 40%);
+            opacity: 0.3;
+          }
+        }
 
         .leaf-particle {
           animation: leafFloat linear infinite;
@@ -1388,13 +1368,13 @@ export default function PlantDiseaseDetector() {
         }
 
         .root {
-  position: absolute;
-  top: 0; /* Change: Start from the top */
-  width: 2px;
-  background: linear-gradient(to bottom, rgba(139, 69, 19, 0.6), transparent); /* Change: Gradient direction */
-  animation: rootGrow 8s ease-out infinite;
-  transform-origin: top; /* Change: Animation origin */
-}
+          position: absolute;
+          bottom: 0;
+          width: 2px;
+          background: linear-gradient(to top, rgba(139, 69, 19, 0.6), transparent);
+          animation: rootGrow 8s ease-out infinite;
+          transform-origin: bottom;
+        }
 
         .root-branch {
           position: absolute;
