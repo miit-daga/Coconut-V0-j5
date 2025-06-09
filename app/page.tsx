@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { MarkdownRenderer } from "@/components/ui/markdown-renderer";
+import { MarkdownRenderer } from "@/components/ui/markdown-renderer"
 import {
   Upload,
   Leaf,
@@ -80,6 +80,7 @@ interface LightParticle {
 
 const COCONUT_ENDPOINT = "https://ff99-34-106-88-244.ngrok-free.app"
 const EGGPLANT_ENDPOINT = "https://placeholder-eggplant-endpoint.ngrok.app"
+const RICE_ENDPOINT = "https://placeholder-rice-endpoint.ngrok.app"
 
 const coconutTreatments = {
   "Bud Root Dropping":
@@ -118,9 +119,21 @@ const eggplantTreatments = {
   "Tobacco Mosaic Virus":
     "🦠 **CRITICAL ALERT: Virus Detected.** This disease has no cure and is highly contagious.\n❌ **Action:** Carefully remove and destroy the infected plant immediately. Wash your hands and disinfect any tools that touched the plant to avoid spreading it.",
 }
+
+const riceTreatments = {
+  "Bacterial Leaf Blight":
+    "🩺 **Problem:** Bacterial infection causing yellowing and wilting of leaves.\n✅ **Action:** Remove infected plants and improve field drainage.\n🛡️ **Treatment:** Apply copper-based bactericides and use resistant varieties.",
+  "Brown Spot":
+    "🩺 **Problem:** Fungal disease causing brown spots on leaves and grains.\n✅ **Action:** Ensure proper nutrition, especially potassium.\n🛡️ **Treatment:** Apply fungicides containing Mancozeb or Propiconazole.",
+  "Leaf Smut":
+    "🩺 **Problem:** Fungal infection causing black powdery masses on leaves.\n✅ **Action:** Remove infected plant parts immediately.\n🛡️ **Treatment:** Apply systemic fungicides and practice crop rotation.",
+  Healthy:
+    "✅ **Excellent Condition:** Your rice plant is healthy. Continue proper water management and balanced fertilization.",
+}
+
 export default function PlantDiseaseDetector() {
   const { theme, setTheme } = useTheme()
-  const [selectedPlant, setSelectedPlant] = useState<"coconut" | "eggplant">("coconut")
+  const [selectedPlant, setSelectedPlant] = useState<"coconut" | "eggplant" | "rice">("coconut")
   const [files, setFiles] = useState<File[]>([])
   const [predictions, setPredictions] = useState<PredictionResult[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
@@ -164,7 +177,7 @@ export default function PlantDiseaseDetector() {
       rotation: Math.random() * 360,
       speed: Math.random() * 1 + 0.5,
       delay: Math.random() * 10,
-    }));
+    }))
 
     const lights = Array.from({ length: 15 }, (_, i) => ({
       id: i,
@@ -205,7 +218,8 @@ export default function PlantDiseaseDetector() {
     setIsProcessing(true)
     setProcessingProgress(0)
 
-    const endpoint = selectedPlant === "coconut" ? COCONUT_ENDPOINT : EGGPLANT_ENDPOINT
+    const endpoint =
+      selectedPlant === "coconut" ? COCONUT_ENDPOINT : selectedPlant === "eggplant" ? EGGPLANT_ENDPOINT : RICE_ENDPOINT
 
     const initialPredictions: PredictionResult[] = files.map((file, index) => ({
       id: `${index}-${file.name}`,
@@ -233,12 +247,12 @@ export default function PlantDiseaseDetector() {
           prev.map((pred) =>
             pred.id === `${i}-${file.name}`
               ? {
-                ...pred,
-                predicted_class: response.ok ? data.predicted_class : undefined,
-                inference_time_seconds: response.ok ? data.inference_time_seconds : undefined,
-                error: response.ok ? undefined : data.error || "Prediction failed",
-                isProcessing: false,
-              }
+                  ...pred,
+                  predicted_class: response.ok ? data.predicted_class : undefined,
+                  inference_time_seconds: response.ok ? data.inference_time_seconds : undefined,
+                  error: response.ok ? undefined : data.error || "Prediction failed",
+                  isProcessing: false,
+                }
               : pred,
           ),
         )
@@ -247,10 +261,10 @@ export default function PlantDiseaseDetector() {
           prev.map((pred) =>
             pred.id === `${i}-${file.name}`
               ? {
-                ...pred,
-                error: `Network error: ${error instanceof Error ? error.message : "Unknown error"}`,
-                isProcessing: false,
-              }
+                  ...pred,
+                  error: `Network error: ${error instanceof Error ? error.message : "Unknown error"}`,
+                  isProcessing: false,
+                }
               : pred,
           ),
         )
@@ -269,7 +283,7 @@ export default function PlantDiseaseDetector() {
     const failed = predictions.filter((p) => p.error).length
     const avgTime =
       predictions.filter((p) => p.inference_time_seconds).reduce((sum, p) => sum + (p.inference_time_seconds || 0), 0) /
-      successful || 0
+        successful || 0
 
     const classCounts: Record<string, number> = {}
     predictions.forEach((p) => {
@@ -288,7 +302,8 @@ export default function PlantDiseaseDetector() {
   }
 
   const stats = getStats()
-  const treatments = selectedPlant === "coconut" ? coconutTreatments : eggplantTreatments
+  const treatments =
+    selectedPlant === "coconut" ? coconutTreatments : selectedPlant === "eggplant" ? eggplantTreatments : riceTreatments
 
   const clearFiles = () => {
     setFiles([])
@@ -578,10 +593,10 @@ export default function PlantDiseaseDetector() {
               <CardContent>
                 <Tabs
                   value={selectedPlant}
-                  onValueChange={(value) => setSelectedPlant(value as "coconut" | "eggplant")}
+                  onValueChange={(value) => setSelectedPlant(value as "coconut" | "eggplant" | "rice")}
                   className="w-full"
                 >
-                  <TabsList className="grid w-full grid-cols-2 mb-6 md:mb-8 transparent-bg border border-primary/30">
+                  <TabsList className="grid w-full grid-cols-3 mb-6 md:mb-8 transparent-bg border border-primary/30">
                     <TabsTrigger
                       value="coconut"
                       className="data-[state=active]:bg-green-600 data-[state=active]:text-white font-mono text-xs md:text-sm"
@@ -612,6 +627,22 @@ export default function PlantDiseaseDetector() {
                         />
                         <span className="hidden md:inline">SOLANUM MELONGENA</span>
                         <span className="md:hidden">EGGPLANT</span>
+                      </div>
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="rice"
+                      className="data-[state=active]:bg-amber-600 data-[state=active]:text-white font-mono text-xs md:text-sm"
+                    >
+                      <div className="flex items-center gap-2 md:gap-3">
+                        <Image
+                          src="/placeholder.svg?height=20&width=20"
+                          alt="Rice Plant"
+                          width={20}
+                          height={20}
+                          className="h-4 w-4 md:h-6 md:w-6 object-contain"
+                        />
+                        <span className="hidden md:inline">ORYZA SATIVA</span>
+                        <span className="md:hidden">RICE</span>
                       </div>
                     </TabsTrigger>
                   </TabsList>
@@ -732,6 +763,67 @@ export default function PlantDiseaseDetector() {
                                     <Image
                                       src="/eggplant-image.png"
                                       alt="Eggplant"
+                                      width={48}
+                                      height={48}
+                                      className="h-12 w-12 md:h-20 md:w-20 object-contain"
+                                    />
+                                  </motion.div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="rice"
+                          initial={{ opacity: 0, x: -50 }}\
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 50 }}
+                          transition={{ duration: 0.6, type: "spring" }}
+                        >
+                          <div className="rounded-2xl p-4 md:p-8 border-none">
+                            <div className="flex flex-col items-center gap-4">
+                              <div className="text-center w-full">
+                                <h3 className="text-xl md:text-3xl font-bold text-amber-500 mb-2 md:mb-4 font-mono">
+                                  RICE ANALYSIS PROTOCOL
+                                </h3>
+                                <p className="text-amber-600 dark:text-amber-200/80 mb-4 md:mb-6 text-sm md:text-lg">
+                                  Comprehensive grain crop pathogen detection with precision agriculture imaging:
+                                </p>
+                              </div>
+
+                              <div className="flex flex-col lg:flex-row items-center w-full gap-4">
+                                <div className="flex-1 w-full">
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 w-full">
+                                    {["Bacterial Blight", "Brown Spot", "Leaf Smut", "Blast"].map((disease, index) => (
+                                      <motion.div
+                                        key={disease}
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: index * 0.1 }}
+                                        className="w-full"
+                                      >
+                                        <Badge
+                                          variant="outline"
+                                          className="bg-amber-950/50 text-amber-300 border-amber-700/80 px-2 md:px-4 py-2 md:py-2 font-mono text-xs md:text-sm w-full justify-center min-h-[40px] flex items-center"
+                                        >
+                                          <Microscope className="h-3 w-3 mr-1 md:mr-2 flex-shrink-0" />
+                                          <span className="text-center">{disease}</span>
+                                        </Badge>
+                                      </motion.div>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                <div className="flex-shrink-0 mt-4 lg:mt-0">
+                                  <motion.div
+                                    className="w-20 h-20 md:w-32 md:h-32 rounded-full transparent-bg border-2 border-amber-500/50 flex items-center justify-center"
+                                    whileHover={{ scale: 1.1, rotate: 360 }}
+                                    transition={{ duration: 2 }}
+                                  >
+                                    <Image
+                                      src="/placeholder.svg?height=48&width=48"
+                                      alt="Rice Plant"
                                       width={48}
                                       height={48}
                                       className="h-12 w-12 md:h-20 md:w-20 object-contain"
