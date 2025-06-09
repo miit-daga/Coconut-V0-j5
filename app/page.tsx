@@ -1522,19 +1522,20 @@ const eggplantTreatments = {
 }
 
 const riceTreatments = {
-  Tungro:
+  "Rice Tungro":
     "🦠 **Problem:** A viral disease causing yellowed, stunted leaves, transmitted by green leafhoppers.\n✅ **Action:** Control the leafhopper vector population using appropriate insecticides.\n🛡️ **Prevention:** Plant tungro-resistant rice varieties and manage weeds which can host the virus.",
-  "Leaf Stripes":
+  "Rice Stripes":
     "🩺 **Problem:** Stripe patterns on leaves, often indicating a nutrient deficiency (like zinc or magnesium) or environmental stress.\n✅ **Action:** Perform a soil analysis to identify nutrient imbalances.\n🛡️ **Treatment:** Apply foliar sprays containing the deficient micronutrients. Ensure proper water management to reduce stress.",
-  Leaffolder:
+  "Rice Leaffolder":
     "🐛 **Problem:** Caterpillars of the Leaffolder moth (*Cnaphalocrocis medinalis*) fold leaves and scrape the green tissue, causing white, transparent streaks.\n✅ **Action:** Encourage natural predators. For severe infestations, apply a targeted insecticide.\n🛡️ **Prevention:** Avoid excessive use of nitrogen fertilizer.",
   Healthy:
     "✅ **Excellent Condition:** The rice plant is healthy and disease-free. Continue with your current care and management schedule.",
-  Rice: "ℹ️ **General Sample:** This is identified as a rice leaf, but no specific disease is detected. For a detailed analysis, please provide an image with clear symptoms.",
-  "Leaf Blast":
+  "Rice Blast":
     "🍄 **Problem:** A major fungal disease (*Pyricularia oryzae*) causing diamond-shaped lesions with grayish centers and brown borders on leaves.\n✅ **Action:** Manage water levels carefully and avoid excessive nitrogen fertilizer.\n🛡️ **Treatment:** Apply a fungicide like Tricyclazole or a strobilurin-based product.",
-  Insect:
+  "Insect":
     "🐞 **Problem:** General damage from various insect pests (e.g., stem borers, planthoppers) other than Leaffolder.\n✅ **Action:** Identify the specific insect causing the damage for effective control.\n🛡️ **Treatment:** Implement Integrated Pest Management (IPM) strategies, including biological controls or targeted insecticides.",
+  "Leaf Scald":
+    "🍄 **Problem:** A fungal disease (*Rhynchosporium oryzae*) that causes zonate, scald-like lesions on leaves, often starting from the tip or margin.\n✅ **Action:** Maintain proper plant spacing for better air circulation and avoid excessive nitrogen fertilizer.\n🛡️ **Treatment:** Apply protective fungicides like Propiconazole if the disease is severe, especially during the later growth stages."
 }
 
 export default function PlantDiseaseDetector() {
@@ -2204,7 +2205,7 @@ export default function PlantDiseaseDetector() {
                               <div className="flex flex-col lg:flex-row items-center w-full gap-4">
                                 <div className="flex-1 w-full">
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 w-full">
-                                    {["Tungro", "Leaf Blast", "Leaffolder", "+3 other"].map((disease, index) => (
+                                    {["Tungro", "Rice Blast", "Leaffolder", "+3 other"].map((disease, index) => (
                                       <motion.div
                                         key={disease}
                                         initial={{ opacity: 0, scale: 0.8 }}
